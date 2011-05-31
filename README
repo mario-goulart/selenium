@@ -1,0 +1,5 @@
+Chicken bindings for Selenium (http://code.google.com/p/selenium)
+
+Very early stages.  Implements the JSON Wire Protocol
+(http://code.google.com/p/selenium/wiki/JsonWireProtocol) and the
+remote and Firefox webdrivers.

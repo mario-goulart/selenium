@@ -1,0 +1,16 @@
+;; -*- scheme -*-
+((egg "seleniun.egg")
+ (synopsis "Chicken bindings for selenium")
+ (author "<a href=\"http://wiki.call-cc.org/users/mario-domenech-goulart\">Mario Domenech Goulart</a>")
+ (depends http-client json intarweb)
+ (test-depends test)
+ (license "BSD")
+ (files "selenium.scm"
+        "selenium.setup"
+        "selenium.meta"
+        "firefox-webdriver.scm"
+        "remote-webdriver.scm"
+        "keys.scm"
+        "tests/run.scm"
+        "tests/firefox.scm"
+        ))
