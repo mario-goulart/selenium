@@ -81,6 +81,6 @@
      (command-executor-path path)
      (desired-capabilities capabilities))
     (run-firefox command profile-dir)
-    (sleep 3)
+    (sleep 3) ;; no detection for when the server is ready yet
     (parameterize ((session-identifier (start-session)))
       (thunk))))

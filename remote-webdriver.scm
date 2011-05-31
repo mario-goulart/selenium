@@ -14,6 +14,6 @@
      (command-executor-path path)
      (desired-capabilities capabilities))
     (run-remote command jar-file)
-    (sleep 9)
+    (sleep 9) ;; no detection for when the server is ready yet
     (parameterize ((session-identifier (start-session)))
       (thunk))))
