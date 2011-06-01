@@ -444,11 +444,13 @@
                                   url-args: (list (element-id elt) property))))
 
 
-(define (set-element-value! elt value #!key (using 'id))
-  ;; value is a vector of strings
-  (remote-execute 'POST "/session/~A/element/~A/value"
-                  url-args: (list (element-id elt))
-                  json-args: `((value . ,value))))
+(define (set-element-value! elt value)
+  (let ((value (if (string? value)
+                   (map ->string (string->list value))
+                   value)))
+    (remote-execute 'POST "/session/~A/element/~A/value"
+                    url-args: (list (element-id elt))
+                    json-args: `((value . ,value)))))
 
 
 (define (active-element-send-modifier! key down?)
