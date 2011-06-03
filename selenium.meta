@@ -2,7 +2,7 @@
 ((egg "seleniun.egg")
  (synopsis "Chicken bindings for selenium")
  (author "<a href=\"http://wiki.call-cc.org/users/mario-domenech-goulart\">Mario Domenech Goulart</a>")
- (depends http-client json intarweb)
+ (depends http-client json intarweb regex)
  (test-depends test)
  (license "BSD")
  (files "selenium.scm"

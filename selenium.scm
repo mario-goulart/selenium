@@ -44,7 +44,10 @@
    get-elements-by-xpath
 
    ;; Cookies
-   ; TODO
+   get-cookies set-cookie! get-cookies-by-name get-cookies-by-value
+   get-cookies-by-domain get-cookies-by-path
+   cookie-name cookie-value cookie-path cookie-domain cookie-secure? cookie-expiry
+
 
    ;; Pages
    page-source page-title refresh-page!
@@ -64,7 +67,7 @@
    )
 
 (import chicken scheme)
-(use json http-client intarweb uri-common srfi-13
+(use json http-client intarweb uri-common srfi-13 srfi-1 regex
      data-structures extras files ports tcp srfi-18 posix)
 
 (include "keys.scm")
@@ -510,8 +513,50 @@
 
 ;;; Cookies
 
-;; TODO
+(define-record cookie name value path domain secure? expiry)
 
+(define (get-cookies)
+  (let ((cookies (response-value (remote-execute 'GET "/session/~A/cookie"))))
+    (map (lambda (c)
+           (apply make-cookie (map cdr (vector->list c))))
+         cookies)))
+
+(define (name/regex-equal obj)
+  (if (string? obj)
+      equal?
+      string-match))
+
+(define (get-cookies-by field str/regex)
+  (let ((cookies (get-cookies))
+        (compare (name/regex-equal str/regex)))
+    (filter-map (lambda (cookie)
+                  (and (compare str/regex
+                                (case field
+                                  ((name) (cookie-name cookie))
+                                  ((value) (cookie-value cookie))
+                                  ((domain) (cookie-domain cookie))
+                                  ((path) (cookie-path cookie))
+                                  (else (error 'get-cookies-by "Invalid field"
+                                               field))))
+                       cookie))
+                cookies)))
+
+(define (get-cookies-by-name name/regex) (get-cookies-by 'name name/regex))
+(define (get-cookies-by-value value/regex) (get-cookies-by 'value value/regex))
+(define (get-cookies-by-domain domain/regex) (get-cookies-by 'domain domain/regex))
+(define (get-cookies-by-path path/regex) (get-cookies-by 'path path/regex))
+
+
+(define (set-cookie! name value #!key path domain secure? expiry)
+  (let ((cookie-data
+         (append `((name . ,name)
+                   (value . ,value))
+                 (if path `((path . ,path)) '())
+                 (if domain `((domain . ,domain)) '())
+                 (if secure? `((secure . ,secure?)) '())
+                 (if expiry `((expiry . ,expiry)) '()))))
+    (remote-execute 'POST "/session/~A/cookie"
+                    json-args: `((cookie . ,(list->vector cookie-data))))))
 
 
 ;;; Pages

@@ -1,4 +1,4 @@
-(use html-tags test selenium)
+(use html-tags test selenium regex)
 
 (define test-page-source
   (<html>
@@ -34,6 +34,56 @@
    (test #t (begin
               (click-element! (get-element-by-id "a-checkbox"))
               (element-selected? (get-element-by-id "a-checkbox"))))
+
+   ;;; Cookies
+   (set-cookie! "foo" "bar")
+   (let* ((cookies (get-cookies))
+          (cookie (car cookies)))
+     (test 1 (length cookies))
+     (test "foo" (cookie-name cookie))
+     (test "bar" (cookie-value cookie))
+     (test "" (cookie-domain cookie))
+     (test "" (cookie-path cookie))
+     (test #f (cookie-secure? cookie)))
+
+   (let* ((cookies (get-cookies-by-name "foo"))
+          (cookie (car cookies)))
+     (test 1 (length cookies))
+     (test "foo" (cookie-name cookie))
+     (test "bar" (cookie-value cookie))
+     (test "" (cookie-domain cookie))
+     (test "" (cookie-path cookie))
+     (test #f (cookie-secure? cookie)))
+
+   (let* ((cookies (get-cookies-by-value "bar"))
+          (cookie (car cookies)))
+     (test 1 (length cookies))
+     (test "foo" (cookie-name cookie))
+     (test "bar" (cookie-value cookie))
+     (test "" (cookie-domain cookie))
+     (test "" (cookie-path cookie))
+     (test #f (cookie-secure? cookie)))
+
+   (let* ((cookies (get-cookies-by-name (regexp "f.*")))
+          (cookie (car cookies)))
+     (test 1 (length cookies))
+     (test "foo" (cookie-name cookie))
+     (test "bar" (cookie-value cookie))
+     (test "" (cookie-domain cookie))
+     (test "" (cookie-path cookie))
+     (test #f (cookie-secure? cookie)))
+
+   ;; The firefox webdriver aparently doesn't set the cookie path...
+   ;; (set-cookie! "foo" "bar" path: "/bar")
+   ;; (let* ((cookies (get-cookies-by-path "/bar"))
+   ;;        (cookie (car cookies)))
+   ;;   (test 1 (length cookies))
+   ;;   (test "foo" (cookie-name cookie))
+   ;;   (test "/bar" (cookie-value cookie))
+   ;;   (test "" (cookie-domain cookie))
+   ;;   (test "/bar" (cookie-path cookie))
+   ;;   (test #f (cookie-secure? cookie)))
+
    (quit!)
    (close-window! (window-handle))
    ))
