@@ -10,7 +10,8 @@
                                      (command "java -jar")
                                      (capabilities '()))
   (parameterize
-    ((command-executor-host host)
+    ((command-executor-scheme scheme)
+     (command-executor-host host)
      (command-executor-port port)
      (command-executor-path path)
      (desired-capabilities capabilities))
