@@ -77,13 +77,15 @@
 ;;; Parameters to be set by webdrivers
 (define session-identifier (make-parameter #f))
 (define desired-capabilities (make-parameter #f))
+(define command-executor-scheme (make-parameter #f))
 (define command-executor-host (make-parameter #f))
 (define command-executor-port (make-parameter #f))
 (define command-executor-path (make-parameter #f))
 
 
 (define (command-executor)
-  (conc (command-executor-host) ":" (command-executor-port) (command-executor-path)))
+  (conc (command-executor-scheme) "://" (command-executor-host) ":"
+        (command-executor-port) (command-executor-path)))
 
 
 (define (selenium-request method path #!optional (data ""))

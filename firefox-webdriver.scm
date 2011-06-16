@@ -67,7 +67,8 @@
 
 
 (define (with-firefox-webdriver profile-dir thunk
-                                #!key (host "http://127.0.0.1")
+                                #!key (scheme 'http)
+                                      (host "127.0.0.1")
                                       (port 7055)
                                       (path "/hub")
                                       (command "firefox")
@@ -76,7 +77,8 @@
                                             (javascriptEnabled . #t)
                                             (platform . "ANY"))))
   (parameterize
-    ((command-executor-host host)
+    ((command-executor-scheme scheme)
+     (command-executor-host host)
      (command-executor-port port)
      (command-executor-path path)
      (desired-capabilities capabilities))
