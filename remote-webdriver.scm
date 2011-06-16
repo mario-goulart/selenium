@@ -1,3 +1,5 @@
+(include "common.scm")
+
 (define (run-remote command jar-file)
   (let ((profile-path (make-pathname (current-directory) "profile")))
     (open-input-pipe (sprintf "~A ~A" command jar-file))))
@@ -16,6 +18,9 @@
      (command-executor-path path)
      (desired-capabilities capabilities))
     (run-remote command jar-file)
-    (sleep 9) ;; no detection for when the server is ready yet
+
+    ;; Wait until the webdriver starts accepting requests
+    (wait-for-connection host port)
+
     (parameterize ((session-identifier (start-session)))
       (thunk))))
