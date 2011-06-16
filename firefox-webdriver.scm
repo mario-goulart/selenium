@@ -87,10 +87,7 @@
     (run-firefox command profile-dir)
 
     ;; Wait until the webdriver starts accepting requests
-    (let loop ()
-      (unless (can-connect? host port)
-        (sleep 1)
-        (loop)))
+    (wait-for-connection host port)
 
     (parameterize ((session-identifier (start-session)))
       (thunk))))
