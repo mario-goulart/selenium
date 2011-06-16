@@ -1,3 +1,5 @@
+(include "common.scm")
+
 (define anonymous-profile-name "WEBDRIVER_ANONYMOUS_PROFILE")
 (define extension-name "fxdriver@googlecode.com")
 
@@ -83,6 +85,12 @@
      (command-executor-path path)
      (desired-capabilities capabilities))
     (run-firefox command profile-dir)
-    (sleep 3) ;; no detection for when the server is ready yet
+
+    ;; Wait until the webdriver starts accepting requests
+    (let loop ()
+      (unless (can-connect? host port)
+        (sleep 1)
+        (loop)))
+
     (parameterize ((session-identifier (start-session)))
       (thunk))))
