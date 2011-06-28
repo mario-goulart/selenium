@@ -1,11 +1,1 @@
-Chicken bindings for Selenium (http://code.google.com/p/selenium)
-
-Very early stages.  Implements the JSON Wire Protocol
-(http://code.google.com/p/selenium/wiki/JsonWireProtocol) and the
-remote and Firefox webdrivers.
-
-Currently the Firefox webdriver requires a profile directory.  You can
-get the data I'm using for the profile at
-http://parenteses.org/mario/misc/profile.tar.bz2.  Extract this
-archive and give its full path to `with-firefox-webdriver' (see the
-tests/firefox.scm file for usage example).
+See http://wiki.call-cc.org/egg/selenium
