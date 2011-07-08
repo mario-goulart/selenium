@@ -1,11 +1,5 @@
 (module selenium
-  (;; Parameters
-   desired-capabilities command-executor-host command-executor-port
-   command-executor-path
-
-   ;; Selenium API
-
-   ;; Session
+  (;; Session
    quit! capabilities set-implicit-wait-time!
 
    ;; Javascript
