@@ -3,3 +3,5 @@
 (use test)
 
 (load "firefox.scm")
+
+(test-exit)
