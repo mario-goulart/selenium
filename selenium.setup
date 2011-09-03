@@ -6,4 +6,4 @@
 
 (install-extension 'selenium
                    '("selenium.so" "selenium.import.so")
-                   '((version "0.5")))
+                   '((version "0.6")))
