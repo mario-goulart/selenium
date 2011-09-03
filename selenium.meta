@@ -4,6 +4,7 @@
  (author "<a href=\"http://wiki.call-cc.org/users/mario-domenech-goulart\">Mario Domenech Goulart</a>")
  (depends http-client json intarweb regex)
  (test-depends test)
+ (category web)
  (license "BSD")
  (files "selenium.scm"
         "selenium.setup"
