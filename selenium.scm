@@ -94,7 +94,7 @@
                (accept "application/json")
                (connection Keep-Alive)
                (content-length ,(string-length data))))))
-           (response
+         (response
           (parameterize ((max-redirect-depth 0)) ;; hack to workaround the 303 bug
             (handle-exceptions exn
               (cond (((condition-predicate 'server-error) exn) ;; handle 500
