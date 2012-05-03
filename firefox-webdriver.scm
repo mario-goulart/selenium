@@ -29,6 +29,7 @@
     (extensions.update.notifyUser . "false")
     (network.manage-offline-status . "false")
     (network.http.max-connections-per-server . "10")
+    (network.http.phishy-userpass-length . "255")
     (prompts.tab_modal.enabled . "false")
     (security.fileuri.origin_policy . "3")
     (security.fileuri.strict_origin_policy . "false")
