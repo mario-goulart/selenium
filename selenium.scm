@@ -393,7 +393,9 @@
 (define element-tag-name (element-property 'name))
 (define element-text (element-property 'text))
 
-(define select-element! (element-property 'selected method: 'POST))
+;; use click instead of selected for newer protocol versions
+(define select-element! (element-property 'click method: 'POST))
+
 (define toggle-element! (element-property 'toggle method: 'POST))
 (define click-element! (element-property 'click method: 'POST))
 (define clear-element! (element-property 'clear method: 'POST))
