@@ -62,10 +62,10 @@
 
 (define (run-firefox command profile-dir)
   (install-user-prefs profile-dir)
-  (setenv "XRE_PROFILE_PATH" profile-dir)
-  (setenv "MOZ_CRASHREPORTER_DISABLE" "1")
-  (setenv "MOZ_NO_REMOTE" "1")
-  (setenv "NO_EM_RESTART" "1")
+  (set-environment-variable! "XRE_PROFILE_PATH" profile-dir)
+  (set-environment-variable! "MOZ_CRASHREPORTER_DISABLE" "1")
+  (set-environment-variable! "MOZ_NO_REMOTE" "1")
+  (set-environment-variable! "NO_EM_RESTART" "1")
   (open-input-pipe (sprintf "~A " command)))
 
 

@@ -60,9 +60,24 @@
    with-remote-webdriver
    )
 
-(import chicken scheme)
-(use json http-client intarweb uri-common srfi-13 srfi-1 regex
-     data-structures extras files ports tcp srfi-18 posix)
+  (import (chicken base)
+	  scheme
+	  json
+	  http-client
+	  intarweb
+	  uri-common
+	  srfi-13
+	  srfi-1
+	  (chicken irregex)
+	  (chicken string)
+	  (chicken pathname)
+	  (chicken port)
+	  (chicken tcp)
+	  (chicken condition)
+	  (chicken format)
+	  srfi-18
+	  (chicken process-context)
+	  (chicken process))
 
 (include "keys.scm")
 
@@ -522,7 +537,7 @@
 (define (name/regex-equal obj)
   (if (string? obj)
       equal?
-      string-match))
+      irregex-match))
 
 (define (get-cookies-by field str/regex)
   (let ((cookies (get-cookies))
