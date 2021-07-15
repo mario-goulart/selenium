@@ -1,0 +1,8 @@
+;; -*- scheme -*-
+((synopsis "Chicken bindings for selenium")
+ (author "<a href=\"http://wiki.call-cc.org/users/mario-domenech-goulart\">Mario Domenech Goulart</a>")
+ (dependencies http-client json intarweb)
+ (test-dependencies test)
+ (category testing)
+ (license "BSD")
+ (components (extension selenium)))

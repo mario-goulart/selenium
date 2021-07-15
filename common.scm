@@ -1,4 +1,4 @@
-(use tcp)
+(import (chicken tcp))
 
 (define (can-connect? host port)
   (handle-exceptions exn
