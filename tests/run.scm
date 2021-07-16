@@ -1,6 +1,6 @@
 (exit 0) ;; not ready for salmonella yet
 
-(use test)
+(import test)
 
 (load "firefox.scm")
 

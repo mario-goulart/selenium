@@ -1,24 +1,12 @@
-(use html-tags test selenium regex)
-
-(define test-page-source
-  (<html>
-   (<head> (<title> "test"))
-   (<body>
-    (<div> id: "foo" "foo-id")
-    (<div> class: "foo" id: "foo-1" "foo-class-1")
-    (<div> class: "foo" id: "foo-2" "foo-class-2")
-    (<input> name: "foo-input" id: "foo-input" value: "foo-input-value")
-    (<a> href: "a-location" "a-link")
-    (<input> type: "checkbox" name: "a-checkbox" id: "a-checkbox")
-    )))
-
-(with-output-to-file "test.html"
-  (cut display test-page-source))
+(import test
+	selenium
+	(chicken pathname)
+	(chicken process-context))
 
 (with-firefox-webdriver
  (make-pathname (current-directory) "profile")
  (lambda ()
-   (set-url! (make-pathname (list "file://" (current-directory)) "test.html"))
+   (set-url! (string-append "file://" (make-pathname (current-directory) "test.html")))
    (test '("foo-1" "foo-2") (map (lambda (elt)
                                    (element-attribute-value elt 'id))
                                  (get-elements-by-class-name "foo")))
