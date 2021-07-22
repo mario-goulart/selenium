@@ -373,7 +373,7 @@
                           json-args: `((using . ,(->string using))
                                        (value . ,(->string value)))))))
     (make-element
-     (uri-encode-string (alist-ref "ELEMENT" (vector->list response) equal?)))))
+     (uri-encode-string (cdr (vector-ref response 0))))))
 
 
 (define (element-property property #!key (method 'GET))
