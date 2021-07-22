@@ -72,8 +72,8 @@
 (define (with-firefox-webdriver profile-dir thunk
                                 #!key (scheme 'http)
                                       (host "127.0.0.1")
-                                      (port 7055)
-                                      (path "/hub")
+                                      (port 4444)
+                                      (path "/wd/hub")
                                       (command "firefox")
                                       (capabilities
                                           '((browserName . "firefox")
