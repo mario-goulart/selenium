@@ -5,7 +5,6 @@
                                       (host "127.0.0.1")
                                       (port 4444)
                                       (path "/wd/hub")
-                                      (command "firefox")
                                       (capabilities
                                           '((browserName . "firefox")
                                             (javascriptEnabled . #t)
