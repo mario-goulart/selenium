@@ -497,7 +497,7 @@
     (map (lambda (result)
            (make-element
             (uri-encode-string
-             (alist-ref "ELEMENT" (vector->list result) equal?))))
+             (cdr (vector-ref result 0)))))
          res)))
 
 (define get-elements-by-class-name get-elements)
