@@ -6,15 +6,14 @@
                                       (port 4444)
                                       (path "/wd/hub")
                                       (capabilities
-                                          '((browserName . "firefox")
-                                            (javascriptEnabled . #t)
-                                            (platform . "ANY"))))
+                                          '()))
   (parameterize
     ((command-executor-scheme scheme)
      (command-executor-host host)
      (command-executor-port port)
      (command-executor-path path)
-     (desired-capabilities capabilities))
+     (desired-capabilities
+      (alist-update 'browserName "firefox" capabilities)))
 
     ;; Wait until the webdriver starts accepting requests
     (wait-for-connection host port)
