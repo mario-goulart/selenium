@@ -1,9 +1,0 @@
-;;; selenium.setup -*- scheme -*-
-
-;; Compile the selenium module
-(compile -s -O3 -d1 -j selenium selenium.scm)
-(compile -s -O3 -d1 selenium.import.scm)
-
-(install-extension 'selenium
-                   '("selenium.so" "selenium.import.so")
-                   '((version "0.6")))
