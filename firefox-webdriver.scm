@@ -1,6 +1,6 @@
 (include "common.scm")
 
-(define (with-firefox-webdriver profile-dir thunk
+(define (with-firefox-webdriver thunk
                                 #!key (scheme 'http)
                                       (host "127.0.0.1")
                                       (port 4444)
