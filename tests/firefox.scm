@@ -81,5 +81,7 @@
    (test (void) (execute-javascript-async "var callback = arguments[1]; callback(console.log('Hello, ' + arguments[0]))" '("Jack")))
    (test (void) (execute-javascript "console.log('Hello, ' + arguments[0])" '("John")))
 
+   (execute-javascript "confirm('example?')" '())
+   (test "example?" (javascript-dialog-text))
    (close-window! (window-handle)))
  capabilities: caps)
