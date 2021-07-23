@@ -4,6 +4,8 @@
 	(chicken process-context)
 	(chicken irregex))
 
+(define caps '((javascriptEnabled . #t)))
+
 (with-firefox-webdriver
  (lambda ()
    (set-url! (string-append "file://" (make-pathname (current-directory) "test.html")))
@@ -73,6 +75,8 @@
    ;;   (test "" (cookie-domain cookie))
    ;;   (test "/bar" (cookie-path cookie))
    ;;   (test #f (cookie-secure? cookie)))
+ 
+   (test (void) (execute-javascript "console.log('Hello, ' + arguments[0])" '("John")))
 
-   (close-window! (window-handle))
-   ))
+   (close-window! (window-handle)))
+ capabilities: caps)
