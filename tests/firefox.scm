@@ -77,7 +77,8 @@
    ;;   (test #f (cookie-secure? cookie)))
 
    (test 0 (alist-ref "status" (set-implicit-wait-time! 0) equal?))
-   
+
+   (test (void) (execute-javascript-async "var callback = arguments[1]; callback(console.log('Hello, ' + arguments[0]))" '("Jack")))
    (test (void) (execute-javascript "console.log('Hello, ' + arguments[0])" '("John")))
 
    (close-window! (window-handle)))
