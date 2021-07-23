@@ -235,10 +235,13 @@
 (define (capabilities)
   (response-value (remote-execute 'GET "/session/~A")))
 
+(define (set-timeout! type time-ms)
+  (remote-execute 'POST "/session/~A/timeouts"
+		  json-args: `((type . ,type)
+			       (ms . ,time-ms))))
 
 (define (set-implicit-wait-time! time-ms)
-  (remote-execute 'POST "/session/~A/timeouts/implicit_wait"
-                  json-args: `((ms . ,time-ms))))
+  (set-timeout! "implicit" time-ms))
 
 
 ;;; Javascript
