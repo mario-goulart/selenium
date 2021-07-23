@@ -75,7 +75,9 @@
    ;;   (test "" (cookie-domain cookie))
    ;;   (test "/bar" (cookie-path cookie))
    ;;   (test #f (cookie-secure? cookie)))
- 
+
+   (test 0 (alist-ref "status" (set-implicit-wait-time! 0) equal?))
+   
    (test (void) (execute-javascript "console.log('Hello, ' + arguments[0])" '("John")))
 
    (close-window! (window-handle)))
