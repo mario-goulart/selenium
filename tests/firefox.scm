@@ -83,5 +83,7 @@
 
    (execute-javascript "confirm('example?')" '())
    (test "example?" (javascript-dialog-text))
+   (test 0 (alist-ref "status" (dismiss-javascript-dialog!) equal?))
+
    (close-window! (window-handle)))
  capabilities: caps)
