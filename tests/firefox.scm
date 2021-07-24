@@ -15,7 +15,7 @@
    (test #t (element? foo-elt))
    (test "foo-id" (element-text foo-elt))
 
-   (define foo-input-elt (get-element-by-xpath "//*[@id='foo-input']"))
+   (define foo-input-elt (get-element-by-tag-name "input"))
    (test #t (element? foo-input-elt))
    (test "foo-input-value" (element-attribute-value foo-input-elt 'value))
 
@@ -26,7 +26,8 @@
 
    (test #t (element? (get-element-by-link-text "a-link")))
 
-   (define foo-checkbox (get-element-by-id "a-checkbox"))
+   (define foo-checkbox (get-element-by-xpath "//*[@id='a-checkbox']"))
+   (test #t (element? foo-checkbox))
    (test (void) (click-element! foo-checkbox))
    (test #t (element-selected? foo-checkbox))
 
