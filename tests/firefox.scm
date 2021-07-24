@@ -66,6 +66,8 @@
      (test "/" (cookie-path cookie))
      (test #f (cookie-secure? cookie)))
 
+   (test 0 (alist-ref "status" (navigate-backward!) equal?))
+
    ;; The firefox webdriver aparently doesn't set the cookie path...
    ;; (set-cookie! "foo" "bar" path: "/bar")
    ;; (let* ((cookies (get-cookies-by-path "/bar"))
