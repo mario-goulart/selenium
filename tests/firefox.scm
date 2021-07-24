@@ -93,6 +93,8 @@
    (execute-javascript "confirm('example?')" '())
    (test 0 (alist-ref "status" (accept-javascript-dialog!) equal?))
 
+   (test #t (list? (window-handles)))
+
    (define win0 (window-handle))
 
    (test #t (string? win0))
