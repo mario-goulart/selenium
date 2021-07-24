@@ -23,7 +23,8 @@
    (test #t (element? foo1-elt))
    (test "input" (element-tag-name foo-input-elt))
    (test #t (element-displayed? foo-elt))
-   (test "a-link" (element-text (get-element-by-link-text "a-link")))
+
+   (test #t (element? (get-element-by-link-text "a-link")))
 
    (define foo-checkbox (get-element-by-id "a-checkbox"))
    (test (void) (click-element! foo-checkbox))
