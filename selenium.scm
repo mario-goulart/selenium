@@ -328,9 +328,9 @@
                   json-args: `((id . ,id))))
 
 
-(define (focus-window! id)
+(define (focus-window! handle)
   (remote-execute 'POST "/session/~A/window"
-                  json-args: `((id . ,id))))
+                  json-args: `((handle . ,handle))))
 
 
 (define (close-window! id)

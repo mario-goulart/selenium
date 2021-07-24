@@ -93,5 +93,10 @@
    (execute-javascript "confirm('example?')" '())
    (test 0 (alist-ref "status" (accept-javascript-dialog!) equal?))
 
-   (close-window! (window-handle)))
+   (define win0 (window-handle))
+
+   (test #t (string? win0))
+   (test 0 (alist-ref "status" (focus-window! win0) equal?))
+
+   (close-window! win0))
  capabilities: caps)
