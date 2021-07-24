@@ -98,5 +98,5 @@
    (test #t (string? win0))
    (test 0 (alist-ref "status" (focus-window! win0) equal?))
 
-   (close-window! win0))
+   (test 0 (alist-ref "status" (close-window!) equal?)))
  capabilities: caps)

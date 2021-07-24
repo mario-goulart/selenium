@@ -333,9 +333,8 @@
                   json-args: `((handle . ,handle))))
 
 
-(define (close-window! id)
-  (remote-execute 'DELETE "/session/~A/window"
-                  json-args: `((id . ,id))))
+(define (close-window!)
+  (remote-execute 'DELETE "/session/~A/window"))
 
 
 (define (window-handle)
