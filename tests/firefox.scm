@@ -67,6 +67,7 @@
      (test #f (cookie-secure? cookie)))
 
    (test 0 (alist-ref "status" (navigate-backward!) equal?))
+   (test 0 (alist-ref "status" (navigate-forward!) equal?))
 
    ;; The firefox webdriver aparently doesn't set the cookie path...
    ;; (set-cookie! "foo" "bar" path: "/bar")
