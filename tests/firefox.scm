@@ -31,6 +31,8 @@
    (test (void) (click-element! foo-checkbox))
    (test #t (element-selected? foo-checkbox))
 
+   (test #t (element? (get-element-by-partial-link-text "a-")))
+
    (test #t ((list-of? element?) (get-elements-by-class-name "foo")))
    (test #t (element? (active-element)))
 
