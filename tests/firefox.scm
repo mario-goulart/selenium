@@ -19,7 +19,8 @@
    (test #t (element? foo-input-elt))
    (test "foo-input-value" (element-attribute-value foo-input-elt 'value))
 
-   (define foo1-elt (get-element-by-id "foo-1"))
+   (define foo1-elt (get-element-by-css-selector "#foo-1"))
+   (test #t (element? foo1-elt))
    (test "input" (element-tag-name foo-input-elt))
    (test #t (element-displayed? foo-elt))
    (test "a-link" (element-text (get-element-by-link-text "a-link")))
