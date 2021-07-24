@@ -13,13 +13,16 @@
                                    (element-attribute-value elt 'id))
                                  (get-elements-by-class-name "foo")))
    (test "test" (page-title))
-   (test "foo-id" (element-text (get-element-by-id "foo")))
+
+   (define foo-elt (get-element-by-id "foo"))
+   (test #t (element? foo-elt))
+   (test "foo-id" (element-text foo-elt))
    (test "foo-input-value" (element-attribute-value (get-element-by-id "foo-input") 'value))
    (test "foo-1" (element-attribute-value (get-element-by-id "foo-1") 'id))
    (test "input" (element-tag-name (get-element-by-id "foo-input")))
    (test "div" (element-tag-name (get-element-by-id "foo-1")))
    (test "foo-class-1" (element-text (get-element-by-id "foo-1")))
-   (test #t (element-displayed? (get-element-by-id "foo")))
+   (test #t (element-displayed? foo-elt))
    (test "a-link" (element-text (get-element-by-link-text "a-link")))
    (test #t (begin
               (click-element! (get-element-by-id "a-checkbox"))
