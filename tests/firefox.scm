@@ -15,7 +15,8 @@
    (test #t (element? foo-elt))
    (test "foo-id" (element-text foo-elt))
 
-   (define foo-input-elt (get-element-by-id "foo-input"))
+   (define foo-input-elt (get-element-by-xpath "//*[@id='foo-input']"))
+   (test #t (element? foo-input-elt))
    (test "foo-input-value" (element-attribute-value foo-input-elt 'value))
 
    (define foo1-elt (get-element-by-id "foo-1"))
