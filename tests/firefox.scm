@@ -25,6 +25,8 @@
               (click-element! (get-element-by-id "a-checkbox"))
               (element-selected? (get-element-by-id "a-checkbox"))))
 
+   (test #t (element? (active-element)))
+
    (test 0 (alist-ref "status" (focus-frame! 0) equal?))
 
    (set-url! "http://example.com/")

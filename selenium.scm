@@ -24,7 +24,7 @@
    user-input-speed set-user-input-speed!
 
    ;; Elements
-   active-element get-element-by-id get-element-by-name get-element-by-class-name
+   element? active-element get-element-by-id get-element-by-name get-element-by-class-name
    get-element-by-css-selector get-element-by-link-text
    get-element-by-partial-link-text get-element-by-tag-name get-element-by-xpath
    element-value element-tag-name element-text select-element! toggle-element!
