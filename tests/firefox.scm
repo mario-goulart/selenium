@@ -26,6 +26,7 @@
               (element-selected? (get-element-by-id "a-checkbox"))))
 
    (set-url! "http://example.com/")
+   (test "http://example.com/" (current-url))
 
    ;;; Cookies
    (set-cookie! "foo" "bar")
