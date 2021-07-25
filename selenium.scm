@@ -480,7 +480,7 @@
   (response-value
    (remote-execute 'GET
                    "/session/~A/element/~A/attribute/~A"
-                   url-args: (list (element-id elt) (->string attrib)))))
+                   url-args: (list (element-id elt) attrib))))
 
 
 (define (same-element? elt1 elt2)
