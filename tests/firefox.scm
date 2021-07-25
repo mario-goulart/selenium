@@ -2,7 +2,8 @@
 	selenium
 	(chicken pathname)
 	(chicken process-context)
-	(chicken irregex))
+	(chicken irregex)
+	(chicken string))
 
 (define caps '((javascriptEnabled . #t)))
 
@@ -10,6 +11,7 @@
  (lambda ()
    (test 0 (alist-ref "status" (set-url! (string-append "file://" (make-pathname (current-directory) "test.html"))) equal?))
    (test 0 (alist-ref "status" (refresh-page!) equal?))
+   (test #t (substring=? "<html>" (page-source)))
    (test "test" (page-title))
 
    (define foo-elt (get-element-by-id "foo"))
