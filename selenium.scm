@@ -332,10 +332,9 @@
   (remote-execute 'POST "/session/~A/window"
                   json-args: `((handle . ,handle))))
 
-
-(define (close-window!)
-  (remote-execute 'DELETE "/session/~A/window"))
-
+(define (close-window! handle)
+  (response-value (remote-execute 'DELETE "/session/~A/window"
+                  json-args: `((handke . ,handle)))))
 
 (define (window-handle)
   (response-value (remote-execute 'GET "/session/~A/window_handle")))

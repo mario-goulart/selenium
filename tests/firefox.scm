@@ -135,5 +135,5 @@
    (define win0 (window-handle))
    (test #t (string? win0))
    (test 0 (alist-ref "status" (focus-window! win0) equal?))
-   (test 0 (alist-ref "status" (close-window!) equal?)))
+   (test '() (close-window! win0)))
  capabilities: caps)
