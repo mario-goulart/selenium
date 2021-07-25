@@ -442,7 +442,7 @@
   (let ((res ;; #(("x" . <coord-x>) ("y" . <coord-y>))
          (response-value
           (remote-execute 'GET
-                          (conc "/session/~A/element/~A/location_in_view")
+                          "/session/~A/element/~A/location_in_view"
                           url-args: (list (element-id elt))))))
     (cons (cdr (vector-ref res 0))
           (cdr (vector-ref res 1)))))
@@ -451,7 +451,7 @@
   (let ((res ;; #(("width" . <coord-x>) ("height" . <coord-y>))
          (response-value
           (remote-execute 'GET
-                          (conc "/session/~A/element/~A/size")
+                          "/session/~A/element/~A/size"
                           url-args: (list (element-id elt))))))
     (cons (cdr (vector-ref res 0))
           (cdr (vector-ref res 1)))))
