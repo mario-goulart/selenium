@@ -18,7 +18,7 @@
    (test #t (pair? (element-location-in-view foo-elt)))
    (test "rgb(0, 0, 0)" (element-css-property-value foo-elt 'color))
 
-   (define foo-input-elt (get-element-by-tag-name "input"))
+   (define foo-input-elt (get-element-by-name "foo-input"))
    (test #t (element? foo-input-elt))
    (test "input" (element-tag-name foo-input-elt))
    (test "foo-input-value" (element-attribute-value foo-input-elt 'value))
@@ -39,6 +39,7 @@
    (test #t (element-selected? foo-checkbox))
 
    (test #t (element? (get-element-by-partial-link-text "a-")))
+   (test #t (element? (get-element-by-tag-name "iframe")))
 
    (test #t ((list-of? element?) (get-elements-by-class-name "foo")))
    (test #t ((list-of? element?) (get-elements-by-id "foo")))
