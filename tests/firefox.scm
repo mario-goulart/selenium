@@ -8,6 +8,7 @@
 (define caps '((javascriptEnabled . #t)))
 
 (with-firefox-webdriver
+ "selenium-server-standalone.jar"
  (lambda ()
    (test (void) (set-url! (string-append "file://" (make-pathname (current-directory) "test.html"))))
    (test (void) (refresh-page!))
