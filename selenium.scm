@@ -381,8 +381,8 @@
   (lambda (elt #!key (using 'id))
     (response-value
      (remote-execute method
-                     (conc "/session/~A/element/~A/" property)
-                     url-args: (list (element-id elt))))))
+                     "/session/~A/element/~A/~A"
+                     url-args: (list (element-id elt) property)))))
 
 (define (get-element-by-id id) (get-element id using: "id"))
 
