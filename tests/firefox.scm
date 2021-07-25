@@ -125,6 +125,8 @@
    (execute-javascript "confirm('example?')" '())
    (test 0 (alist-ref "status" (accept-javascript-dialog!) equal?))
 
+   (test 0 (alist-ref "status"  (click-mouse-button! "left") equal?))
+
    (test #t ((list-of? string?) (window-handles)))
 
    (define win0 (window-handle))
