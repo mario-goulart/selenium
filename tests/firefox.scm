@@ -17,11 +17,12 @@
 
    (define foo-input-elt (get-element-by-tag-name "input"))
    (test #t (element? foo-input-elt))
+   (test "input" (element-tag-name foo-input-elt))
    (test "foo-input-value" (element-attribute-value foo-input-elt 'value))
+   (test (void) (clear-element! foo-input-elt))
 
    (define foo1-elt (get-element-by-css-selector "#foo-1"))
    (test #t (element? foo1-elt))
-   (test "input" (element-tag-name foo-input-elt))
    (test #t (element-displayed? foo-elt))
 
    (test #t (element? (get-element-by-link-text "a-link")))
