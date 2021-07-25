@@ -491,7 +491,7 @@
                                    (element-id elt2)))))
 
 
-(define (get-elements value #!optional (using "class name"))
+(define (get-elements value #!key (using "class name"))
   (let ((res (response-value
               (remote-execute 'POST "/session/~A/elements"
                               json-args: `((using . ,using)

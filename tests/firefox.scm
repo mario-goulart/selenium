@@ -41,6 +41,14 @@
    (test #t (element? (get-element-by-partial-link-text "a-")))
 
    (test #t ((list-of? element?) (get-elements-by-class-name "foo")))
+   (test #t ((list-of? element?) (get-elements-by-id "foo")))
+   (test #t ((list-of? element?) (get-elements-by-tag-name "iframe")))
+   (test #t ((list-of? element?) (get-elements-by-xpath "//*[@id='a-checkbox']")))
+   (test #t ((list-of? element?) (get-elements-by-css-selector "#foo-1")))
+   (test #t ((list-of? element?) (get-elements-by-link-text "a-link")))
+   (test #t ((list-of? element?) (get-elements-by-partial-link-text "a-")))
+   (test #t ((list-of? element?) (get-elements-by-name "foo-input")))
+   
    (test #t (element? (active-element)))
 
    (test 0 (alist-ref "status" (focus-frame! 0) equal?))
