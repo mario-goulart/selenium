@@ -15,6 +15,7 @@
    (test #t (element? foo-elt))
    (test "foo-id" (element-text foo-elt))
    (test '(8 . 8) (element-location foo-elt))
+   (test '(8 . 8) (element-location-in-view foo-elt))
 
    (define foo-input-elt (get-element-by-tag-name "input"))
    (test #t (element? foo-input-elt))
