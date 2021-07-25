@@ -16,6 +16,7 @@
    (test "foo-id" (element-text foo-elt))
    (test #t (pair? (element-location foo-elt)))
    (test #t (pair? (element-location-in-view foo-elt)))
+   (test "rgb(0, 0, 0)" (element-css-property-value foo-elt 'color))
 
    (define foo-input-elt (get-element-by-tag-name "input"))
    (test #t (element? foo-input-elt))
