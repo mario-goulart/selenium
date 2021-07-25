@@ -371,8 +371,8 @@
   (let ((response
          (response-value
           (remote-execute 'POST "/session/~A/element"
-                          json-args: `((using . ,(->string using))
-                                       (value . ,(->string value)))))))
+                          json-args: `((using . ,using)
+                                       (value . ,value))))))
     (make-element
      (uri-encode-string (cdr (vector-ref response 0))))))
 
