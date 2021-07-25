@@ -23,7 +23,8 @@
 
    (define foo1-elt (get-element-by-css-selector "#foo-1"))
    (test #t (element? foo1-elt))
-   (test #t (element-displayed? foo-elt))
+   (test #t (element-enabled? foo1-elt))
+   (test #t (element-displayed? foo1-elt))
 
    (test #t (element? (get-element-by-link-text "a-link")))
 
