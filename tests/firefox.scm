@@ -14,7 +14,10 @@
    (test (void) (refresh-page!))
    (test #t (substring=? "<html>" (page-source)))
    (test "test" (page-title))
+
    (test #t (substring=? "iVB" (screenshot)))
+
+   (test #t (alist-ref "ready" (status) equal?))
 
    (define foo-elt (get-element-by-id "foo"))
    (test #t (element? foo-elt))

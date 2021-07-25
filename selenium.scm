@@ -1,6 +1,6 @@
 (module selenium
   (;; Session
-   quit! capabilities set-implicit-wait-time!
+   quit! status capabilities set-implicit-wait-time!
 
    ;; Javascript
    execute-javascript execute-javascript-async javascript-dialog-text
@@ -231,6 +231,8 @@
 (define (quit!)
   (remote-execute 'DELETE "/session/~A"))
 
+(define (status)
+  (vector->list (response-value (remote-execute 'GET "/status"))))
 
 (define (capabilities)
   (response-value (remote-execute 'GET "/session/~A")))
