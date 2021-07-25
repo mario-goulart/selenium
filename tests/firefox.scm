@@ -9,6 +9,7 @@
 (with-firefox-webdriver
  (lambda ()
    (test 0 (alist-ref "status" (set-url! (string-append "file://" (make-pathname (current-directory) "test.html"))) equal?))
+   (test 0 (alist-ref "status" (refresh-page!) equal?))
    (test "test" (page-title))
 
    (define foo-elt (get-element-by-id "foo"))
