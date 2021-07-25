@@ -433,7 +433,7 @@
   (let ((res ;; #(("x" . <coord-x>) ("y" . <coord-y>))
          (response-value
           (remote-execute 'GET
-                          (conc "/session/~A/element/~A/location")
+                          "/session/~A/element/~A/location"
                           url-args: (list (element-id elt))))))
     (cons (cdr (vector-ref res 0))
           (cdr (vector-ref res 1)))))
