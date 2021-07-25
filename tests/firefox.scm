@@ -23,6 +23,7 @@
    (test "input" (element-tag-name foo-input-elt))
    (test "foo-input-value" (element-attribute-value foo-input-elt 'value))
    (test (void) (clear-element! foo-input-elt))
+   (test 0 (alist-ref "status" (set-element-value! foo-input-elt "new value") equal?))
 
    (define foo1-elt (get-element-by-css-selector "#foo-1"))
    (test #t (element? foo1-elt))
