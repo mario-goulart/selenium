@@ -236,9 +236,9 @@
   (response-value (remote-execute 'GET "/session/~A")))
 
 (define (set-timeout! type time-ms)
-  (remote-execute 'POST "/session/~A/timeouts"
+  (response-value (remote-execute 'POST "/session/~A/timeouts"
 		  json-args: `((type . ,type)
-			       (ms . ,time-ms))))
+			       (ms . ,time-ms)))))
 
 (define (set-implicit-wait-time! time-ms)
   (set-timeout! "implicit" time-ms))
@@ -269,18 +269,18 @@
 
 
 (define (dismiss-javascript-dialog!)
-  (remote-execute 'POST "/session/~A/dismiss_alert"))
+  (response-value (remote-execute 'POST "/session/~A/dismiss_alert")))
 
 
 (define (accept-javascript-dialog!)
-  (remote-execute 'POST "/session/~A/accept_alert"))
+  (response-value (remote-execute 'POST "/session/~A/accept_alert")))
 
 
 
 ;;; URLs
 (define (set-url! url)
-  (remote-execute 'POST "/session/~A/url"
-                  json-args: `((url . ,url))))
+  (response-value (remote-execute 'POST "/session/~A/url"
+                  json-args: `((url . ,url)))))
 
 
 (define (current-url)
@@ -290,11 +290,11 @@
 
 ;;; Navigation
 (define (navigate-forward!)
-  (remote-execute 'POST "/session/~A/forward"))
+  (response-value (remote-execute 'POST "/session/~A/forward")))
 
 
 (define (navigate-backward!)
-  (remote-execute 'POST "/session/~A/back"))
+  (response-value (remote-execute 'POST "/session/~A/back")))
 
 
 
@@ -324,13 +324,13 @@
 ;;; Frames & windows
 
 (define (focus-frame! id)
-  (remote-execute 'POST "/session/~A/frame"
-                  json-args: `((id . ,id))))
+  (response-value (remote-execute 'POST "/session/~A/frame"
+                  json-args: `((id . ,id)))))
 
 
 (define (focus-window! handle)
-  (remote-execute 'POST "/session/~A/window"
-                  json-args: `((handle . ,handle))))
+  (response-value (remote-execute 'POST "/session/~A/window"
+                  json-args: `((handle . ,handle)))))
 
 (define (close-window! handle)
   (response-value (remote-execute 'DELETE "/session/~A/window"
@@ -465,9 +465,9 @@
   (let ((value (if (string? value)
                    (map ->string (string->list value))
                    value)))
-    (remote-execute 'POST "/session/~A/element/~A/value"
+    (response-value (remote-execute 'POST "/session/~A/element/~A/value"
                     url-args: (list (element-id elt))
-                    json-args: `((value . ,value)))))
+                    json-args: `((value . ,value))))))
 
 
 (define (active-element-send-modifier! key down?)
@@ -584,7 +584,7 @@
 
 
 (define (refresh-page!)
-  (remote-execute 'POST "/session/~A/refresh"))
+  (response-value (remote-execute 'POST "/session/~A/refresh")))
 
 
 
@@ -602,7 +602,7 @@
 ;;; Mouse actions
 
 (define (move-mouse-cursor-to! #!optional x y elt)
-  (remote-execute 'POST "/session/~A/moveto"
+  (response-value (remote-execute 'POST "/session/~A/moveto"
                   json-args: (append
                               (if elt
                                   `((element . ,(element-id elt)))
@@ -612,25 +612,25 @@
                                   '())
                               (if y
                                   `((yoffset . ,y))
-                                  '()))))
+                                  '())))))
 
 
 (define (click-mouse-button! #!optional button)
-  (remote-execute 'POST "/session/~A/click"
+  (response-value (remote-execute 'POST "/session/~A/click"
                   json-args: (and button
-                                  `((button . ,button)))))
+                                  `((button . ,button))))))
 
 
 (define (mouse-button-down!)
-  (remote-execute 'POST "/session/~A/buttondown"))
+  (response-value (remote-execute 'POST "/session/~A/buttondown")))
 
 
 (define (mouse-button-up!)
-  (remote-execute 'POST "/session/~A/buttonup"))
+  (response-value (remote-execute 'POST "/session/~A/buttonup")))
 
 
 (define (double-click-mouse-button!)
-  (remote-execute 'POST "/session/~A/doubleclick"))
+  (response-value (remote-execute 'POST "/session/~A/doubleclick")))
 
 (include "firefox-webdriver.scm")
 (include "remote-webdriver.scm")

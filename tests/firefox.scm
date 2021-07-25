@@ -9,8 +9,8 @@
 
 (with-firefox-webdriver
  (lambda ()
-   (test 0 (alist-ref "status" (set-url! (string-append "file://" (make-pathname (current-directory) "test.html"))) equal?))
-   (test 0 (alist-ref "status" (refresh-page!) equal?))
+   (test (void) (set-url! (string-append "file://" (make-pathname (current-directory) "test.html"))))
+   (test (void) (refresh-page!))
    (test #t (substring=? "<html>" (page-source)))
    (test "test" (page-title))
    (test #t (substring=? "iVB" (screenshot)))
@@ -27,14 +27,14 @@
    (test "input" (element-tag-name foo-input-elt))
    (test "foo-input-value" (element-attribute-value foo-input-elt 'value))
    (test (void) (clear-element! foo-input-elt))
-   (test 0 (alist-ref "status" (set-element-value! foo-input-elt "new value") equal?))
+   (test (void) (set-element-value! foo-input-elt "new value"))
 
    (define foo1-elt (get-element-by-css-selector "#foo-1"))
    (test #t (element? foo1-elt))
    (test #t (element-enabled? foo1-elt))
    (test #t (element-displayed? foo1-elt))
    (test #t (pair? (element-size foo1-elt)))
-   (test 0 (alist-ref "status" (move-mouse-cursor-to! 1 1 foo1-elt) equal? 0))
+   (test (void) (move-mouse-cursor-to! 1 1 foo1-elt))
 
    (test #t (element? (get-element-by-link-text "a-link")))
 
@@ -57,7 +57,7 @@
    
    (test #t (element? (active-element)))
 
-   (test 0 (alist-ref "status" (focus-frame! 0) equal?))
+   (test (void) (focus-frame! 0))
 
    (set-url! "http://example.com/")
    (test "http://example.com/" (current-url))
@@ -100,8 +100,8 @@
      (test "/" (cookie-path cookie))
      (test #f (cookie-secure? cookie)))
 
-   (test 0 (alist-ref "status" (navigate-backward!) equal?))
-   (test 0 (alist-ref "status" (navigate-forward!) equal?))
+   (test (void) (navigate-backward!))
+   (test (void) (navigate-forward!))
 
    ;; The firefox webdriver aparently doesn't set the cookie path...
    ;; (set-cookie! "foo" "bar" path: "/bar")
@@ -114,26 +114,26 @@
    ;;   (test "/bar" (cookie-path cookie))
    ;;   (test #f (cookie-secure? cookie)))
 
-   (test 0 (alist-ref "status" (set-implicit-wait-time! 0) equal?))
+   (test (void) (set-implicit-wait-time! 0))
 
    (test (void) (execute-javascript-async "var callback = arguments[1]; callback(console.log('Hello, ' + arguments[0]))" '("Jack")))
    (test (void) (execute-javascript "console.log('Hello, ' + arguments[0])" '("John")))
 
    (execute-javascript "confirm('example?')" '())
    (test "example?" (javascript-dialog-text))
-   (test 0 (alist-ref "status" (dismiss-javascript-dialog!) equal?))
+   (test (void) (dismiss-javascript-dialog!))
    (execute-javascript "confirm('example?')" '())
-   (test 0 (alist-ref "status" (accept-javascript-dialog!) equal?))
+   (test (void) (accept-javascript-dialog!))
 
-   (test 0 (alist-ref "status" (click-mouse-button! "left") equal?))
-   (test 0 (alist-ref "status" (mouse-button-down!) equal?))
-   (test 0 (alist-ref "status" (mouse-button-up!) equal?))
-   (test 0 (alist-ref "status" (double-click-mouse-button!) equal?))
+   (test (void) (click-mouse-button! "left"))
+   (test (void) (mouse-button-down!))
+   (test (void) (mouse-button-up!))
+   (test (void) (double-click-mouse-button!))
    
    (test #t ((list-of? string?) (window-handles)))
 
    (define win0 (window-handle))
    (test #t (string? win0))
-   (test 0 (alist-ref "status" (focus-window! win0) equal?))
+   (test (void) (focus-window! win0))
    (test '() (close-window! win0)))
  capabilities: caps)
