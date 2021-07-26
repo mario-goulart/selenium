@@ -40,7 +40,7 @@
    page-source page-title refresh-page!
 
    ;; Screen
-   screen-orientation screenshot
+   screenshot
 
    ;; Mouse actions
    move-mouse-cursor-to! click-mouse-button! mouse-button-down! mouse-button-up!
@@ -512,11 +512,6 @@
 
 
 ;;; Screen
-
-(define (screen-orientation elt)
-  (let ((res (response-value (remote-execute 'GET "/session/~A/orientation"))))
-    (string->symbol (string-downcase res))))
-
 
 (define (screenshot)
   (response-value (remote-execute 'GET "/session/~A/screenshot")))
