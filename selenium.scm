@@ -21,7 +21,7 @@
    get-element-by-css-selector get-element-by-link-text
    get-element-by-partial-link-text get-element-by-tag-name get-element-by-xpath
    element-value element-tag-name element-text select-element!
-   click-element! clear-element! drag-element! element-enabled?
+   click-element! clear-element! element-enabled?
    element-selected? element-displayed? element-location element-location-in-view
    element-size element-css-property-value set-element-value!
    active-element-send-modifier! element-attribute-value same-element?
@@ -362,14 +362,6 @@
 
 (define click-element! (element-property 'click method: 'POST))
 (define clear-element! (element-property 'clear method: 'POST))
-
-(define (drag-element! elt x y)
-  (remote-execute 'POST
-                  (conc "/session/~A/element/~A/drag")
-                  url-args: (list (element-id elt))
-                  json-args: `((x . ,x)
-                               (y . ,y))))
-
 
 (define element-enabled? (element-property 'enabled))
 (define element-selected? (element-property 'selected))
