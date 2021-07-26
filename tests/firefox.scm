@@ -144,5 +144,6 @@
    (test #t (string? win0))
    (test (void) (focus-window! win0))
    (test "x" (caar (window-size win0)))
+   (test "width" (caar (window-position win0)))
    (test '() (close-window! win0)))
  capabilities: caps)
