@@ -303,7 +303,7 @@
 
 (define (close-window! handle)
   (response-value (remote-execute 'DELETE "/session/~A/window"
-                  json-args: `((handke . ,handle)))))
+                  json-args: `((handle . ,handle)))))
 
 (define (window-handle)
   (response-value (remote-execute 'GET "/session/~A/window_handle")))
