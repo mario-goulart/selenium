@@ -16,9 +16,6 @@
    ;; Frames & windows
    focus-frame! focus-window! close-window! window-handle window-handles
 
-   ;; User input
-   user-input-speed set-user-input-speed!
-
    ;; Elements
    element? active-element get-element-by-id get-element-by-name get-element-by-class-name
    get-element-by-css-selector get-element-by-link-text
@@ -306,19 +303,6 @@
 
 (define (window-handles)
   (response-value (remote-execute 'GET "/session/~A/window_handles")))
-
-
-
-;;; User input
-
-(define (user-input-speed)
-  (response-value (remote-execute 'GET "/session/~A/speed")))
-
-
-(define (set-user-input-speed! speed)
-  (remote-execute 'POST "/session/~A/speed"
-                  json-args: `((speed . ,speed))))
-
 
 ;;; Elements
 
