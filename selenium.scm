@@ -1,6 +1,6 @@
 (module selenium
   (;; Session
-   quit! status capabilities set-implicit-wait-time!
+   quit! status set-implicit-wait-time!
 
    ;; Javascript
    execute-javascript execute-javascript-async javascript-dialog-text
@@ -233,9 +233,6 @@
 
 (define (status)
   (vector->list (response-value (remote-execute 'GET "/status"))))
-
-(define (capabilities)
-  (response-value (remote-execute 'GET "/session/~A")))
 
 (define (set-timeout! type time-ms)
   (response-value (remote-execute 'POST "/session/~A/timeouts"
