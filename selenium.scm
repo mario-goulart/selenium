@@ -4,7 +4,7 @@
 
    ;; Javascript
    execute-javascript execute-javascript-async javascript-dialog-text
-   set-javascript-dialog-text! dismiss-javascript-dialog!
+   dismiss-javascript-dialog!
    accept-javascript-dialog!
 
    ;; URLs
@@ -260,12 +260,6 @@
 
 (define (javascript-dialog-text)
   (response-value (remote-execute 'GET "/session/~A/alert_text")))
-
-
-(define (set-javascript-dialog-text! text)
-  (remote-execute 'POST "/session/~A/alert_text"
-                  json-args: `((keysToSend . ,text))))
-
 
 (define (dismiss-javascript-dialog!)
   (response-value (remote-execute 'POST "/session/~A/dismiss_alert")))
