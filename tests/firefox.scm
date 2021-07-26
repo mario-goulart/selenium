@@ -1,39 +1,73 @@
-(use html-tags test selenium regex)
+(import test
+	selenium
+	(chicken pathname)
+	(chicken process-context)
+	(chicken irregex)
+	(chicken string))
 
-(define test-page-source
-  (<html>
-   (<head> (<title> "test"))
-   (<body>
-    (<div> id: "foo" "foo-id")
-    (<div> class: "foo" id: "foo-1" "foo-class-1")
-    (<div> class: "foo" id: "foo-2" "foo-class-2")
-    (<input> name: "foo-input" id: "foo-input" value: "foo-input-value")
-    (<a> href: "a-location" "a-link")
-    (<input> type: "checkbox" name: "a-checkbox" id: "a-checkbox")
-    )))
-
-(with-output-to-file "test.html"
-  (cut display test-page-source))
+(define caps '((javascriptEnabled . #t)))
 
 (with-firefox-webdriver
- (make-pathname (current-directory) "profile")
+ "selenium-server-standalone.jar"
  (lambda ()
-   (set-url! (make-pathname (list "file://" (current-directory)) "test.html"))
-   (test '("foo-1" "foo-2") (map (lambda (elt)
-                                   (element-attribute-value elt 'id))
-                                 (get-elements-by-class-name "foo")))
+   (test (void) (set-url! (string-append "file://" (make-pathname (current-directory) "test.html"))))
+   (test (void) (refresh-page!))
+   (test #t (substring=? "<html>" (page-source)))
    (test "test" (page-title))
-   (test "foo-id" (element-text (get-element-by-id "foo")))
-   (test "foo-input-value" (element-value (get-element-by-id "foo-input")))
-   (test "foo-1" (element-attribute-value (get-element-by-id "foo-1") 'id))
-   (test "input" (element-tag-name (get-element-by-id "foo-input")))
-   (test "div" (element-tag-name (get-element-by-id "foo-1")))
-   (test "foo-class-1" (element-text (get-element-by-id "foo-1")))
-   (test #t (element-displayed? (get-element-by-id "foo")))
-   (test "a-link" (element-text (get-element-by-link-text "a-link")))
-   (test #t (begin
-              (click-element! (get-element-by-id "a-checkbox"))
-              (element-selected? (get-element-by-id "a-checkbox"))))
+
+   (test #t (substring=? "iVB" (screenshot)))
+
+   (test #t (alist-ref "ready" (status) equal?))
+   (test "id" (car (vector-ref (car (sessions)) 0)))
+
+   (define foo-elt (get-element-by-id "foo"))
+   (test #t (element? foo-elt))
+   (test "foo-id" (element-text foo-elt))
+   (test #t (pair? (element-location foo-elt)))
+   (test #t (pair? (element-location-in-view foo-elt)))
+   (test "rgb(0, 0, 0)" (element-css-property foo-elt 'color))
+
+   (define foo-input-elt (get-element-by-name "foo-input"))
+   (test #t (element? foo-input-elt))
+   (test "input" (element-tag-name foo-input-elt))
+   (test "foo-input-value" (element-attribute foo-input-elt 'value))
+   (test "foo-input-value" (element-property foo-input-elt 'value))
+   (test (void) (clear-element! foo-input-elt))
+   (test (void) (set-element-value! foo-input-elt "new value"))
+
+   (define foo1-elt (get-element-by-css-selector "#foo-1"))
+   (test #t (element? foo1-elt))
+   (test #t (element-enabled? foo1-elt))
+   (test #t (element-displayed? foo1-elt))
+   (test #t (pair? (element-size foo1-elt)))
+   (test (void) (move-mouse-cursor-to! 1 1 foo1-elt))
+   (test (void) (select-element! foo1-elt))
+
+   (test #t (element? (get-element-by-link-text "a-link")))
+
+   (define foo-checkbox (get-element-by-xpath "//*[@id='a-checkbox']"))
+   (test #t (element? foo-checkbox))
+   (test (void) (click-element! foo-checkbox))
+   (test #t (element-selected? foo-checkbox))
+
+   (test #t (element? (get-element-by-partial-link-text "a-")))
+   (test #t (element? (get-element-by-tag-name "iframe")))
+
+   (test #t ((list-of? element?) (get-elements-by-class-name "foo")))
+   (test #t ((list-of? element?) (get-elements-by-id "foo")))
+   (test #t ((list-of? element?) (get-elements-by-tag-name "iframe")))
+   (test #t ((list-of? element?) (get-elements-by-xpath "//*[@id='a-checkbox']")))
+   (test #t ((list-of? element?) (get-elements-by-css-selector "#foo-1")))
+   (test #t ((list-of? element?) (get-elements-by-link-text "a-link")))
+   (test #t ((list-of? element?) (get-elements-by-partial-link-text "a-")))
+   (test #t ((list-of? element?) (get-elements-by-name "foo-input")))
+   
+   (test #t (element? (active-element)))
+
+   (test (void) (focus-frame! 0))
+
+   (set-url! "http://example.com/")
+   (test "http://example.com/" (current-url))
 
    ;;; Cookies
    (set-cookie! "foo" "bar")
@@ -42,8 +76,8 @@
      (test 1 (length cookies))
      (test "foo" (cookie-name cookie))
      (test "bar" (cookie-value cookie))
-     (test "" (cookie-domain cookie))
-     (test "" (cookie-path cookie))
+     (test "example.com" (cookie-domain cookie))
+     (test "/" (cookie-path cookie))
      (test #f (cookie-secure? cookie)))
 
    (let* ((cookies (get-cookies-by-name "foo"))
@@ -51,8 +85,8 @@
      (test 1 (length cookies))
      (test "foo" (cookie-name cookie))
      (test "bar" (cookie-value cookie))
-     (test "" (cookie-domain cookie))
-     (test "" (cookie-path cookie))
+     (test "example.com" (cookie-domain cookie))
+     (test "/" (cookie-path cookie))
      (test #f (cookie-secure? cookie)))
 
    (let* ((cookies (get-cookies-by-value "bar"))
@@ -60,18 +94,21 @@
      (test 1 (length cookies))
      (test "foo" (cookie-name cookie))
      (test "bar" (cookie-value cookie))
-     (test "" (cookie-domain cookie))
-     (test "" (cookie-path cookie))
+     (test "example.com" (cookie-domain cookie))
+     (test "/" (cookie-path cookie))
      (test #f (cookie-secure? cookie)))
 
-   (let* ((cookies (get-cookies-by-name (regexp "f.*")))
+   (let* ((cookies (get-cookies-by-name (irregex "f.*")))
           (cookie (car cookies)))
      (test 1 (length cookies))
      (test "foo" (cookie-name cookie))
      (test "bar" (cookie-value cookie))
-     (test "" (cookie-domain cookie))
-     (test "" (cookie-path cookie))
+     (test "example.com" (cookie-domain cookie))
+     (test "/" (cookie-path cookie))
      (test #f (cookie-secure? cookie)))
+
+   (test (void) (navigate-backward!))
+   (test (void) (navigate-forward!))
 
    ;; The firefox webdriver aparently doesn't set the cookie path...
    ;; (set-cookie! "foo" "bar" path: "/bar")
@@ -84,6 +121,32 @@
    ;;   (test "/bar" (cookie-path cookie))
    ;;   (test #f (cookie-secure? cookie)))
 
-   (quit!)
-   (close-window! (window-handle))
-   ))
+   (test (void) (set-implicit-timeout! 0))
+   (test (void) (set-script-timeout! 30000))
+   (test (void) (set-page-load-timeout! 300000))
+
+   (test (void) (execute-javascript-async "var callback = arguments[1]; callback(console.log('Hello, ' + arguments[0]))" '("Jack")))
+   (test (void) (execute-javascript "console.log('Hello, ' + arguments[0])" '("John")))
+
+   (execute-javascript "confirm('example?')" '())
+   (test "example?" (javascript-dialog-text))
+   (test (void) (dismiss-javascript-dialog!))
+   (execute-javascript "confirm('example?')" '())
+   (test (void) (accept-javascript-dialog!))
+
+   (test (void) (click-mouse-button! "left"))
+   (test (void) (mouse-button-down!))
+   (test (void) (mouse-button-up!))
+   (test (void) (double-click-mouse-button!))
+   
+   (test #t ((list-of? string?) (window-handles)))
+
+   (define win0 (window-handle))
+   (test #t (string? win0))
+   (test (void) (focus-window! win0))
+   (test "x" (caar (window-size win0)))
+   (test "width" (caar (window-position win0)))
+   (test "x" (car (vector-ref (set-window-size! win0 width: 1024 height: 768) 0)))
+   (test "x" (car (vector-ref (set-window-position! win0 x: 10 y: 10) 0)))
+   (test '() (close-window! win0)))
+ capabilities: caps)

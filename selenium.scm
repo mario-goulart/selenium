@@ -1,10 +1,10 @@
 (module selenium
   (;; Session
-   quit! capabilities set-implicit-wait-time!
+   quit! status sessions set-implicit-timeout! set-script-timeout! set-page-load-timeout!
 
    ;; Javascript
    execute-javascript execute-javascript-async javascript-dialog-text
-   set-javascript-dialog-text! dismiss-javascript-dialog!
+   dismiss-javascript-dialog!
    accept-javascript-dialog!
 
    ;; URLs
@@ -13,25 +13,18 @@
    ;; Navigation
    navigate-forward! navigate-backward!
 
-   ;; IME: Input Method Editor
-   ime-available-engines ime-active-engine ime-activated? ime-deactivate!
-   ime-activate!
-
    ;; Frames & windows
-   focus-frame! focus-window! close-window! window-handle window-handles
-
-   ;; User input
-   user-input-speed set-user-input-speed!
+   focus-frame! focus-window! close-window! window-handle window-handles window-size set-window-size! window-position set-window-position!
 
    ;; Elements
-   active-element get-element-by-id get-element-by-name get-element-by-class-name
+   element? active-element get-element-by-id get-element-by-name get-element-by-class-name
    get-element-by-css-selector get-element-by-link-text
    get-element-by-partial-link-text get-element-by-tag-name get-element-by-xpath
-   element-value element-tag-name element-text select-element! toggle-element!
-   click-element! clear-element! hover-element! drag-element! element-enabled?
+   element-value element-tag-name element-text select-element!
+   click-element! clear-element! element-enabled?
    element-selected? element-displayed? element-location element-location-in-view
-   element-size element-css-property-value set-element-value!
-   active-element-send-modifier! element-attribute-value same-element?
+   element-size element-css-property set-element-value!
+   element-attribute element-property
    get-elements-by-class-name get-elements-by-css-selector get-elements-by-id
    get-elements-by-name get-elements-by-link-text
    get-elements-by-partial-link-text get-elements-by-tag-name
@@ -47,7 +40,7 @@
    page-source page-title refresh-page!
 
    ;; Screen
-   screen-orientation screenshot
+   screenshot
 
    ;; Mouse actions
    move-mouse-cursor-to! click-mouse-button! mouse-button-down! mouse-button-up!
@@ -60,9 +53,24 @@
    with-remote-webdriver
    )
 
-(import chicken scheme)
-(use json http-client intarweb uri-common srfi-13 srfi-1 regex
-     data-structures extras files ports tcp srfi-18 posix)
+(import (chicken base)
+	  scheme
+	  json
+	  http-client
+	  intarweb
+	  uri-common
+	  srfi-13
+	  srfi-1
+	  (chicken irregex)
+	  (chicken string)
+	  (chicken pathname)
+	  (chicken port)
+	  (chicken tcp)
+	  (chicken condition)
+	  (chicken format)
+	  srfi-18
+	  (chicken process-context)
+	  (chicken process))
 
 (include "keys.scm")
 
@@ -216,15 +224,25 @@
 (define (quit!)
   (remote-execute 'DELETE "/session/~A"))
 
+(define (status)
+  (vector->list (response-value (remote-execute 'GET "/status"))))
 
-(define (capabilities)
-  (response-value (remote-execute 'GET "/session/~A")))
+(define (sessions)
+  (response-value (remote-execute 'GET "/sessions")))
 
+(define (set-timeout! type time-ms)
+  (response-value (remote-execute 'POST "/session/~A/timeouts"
+		  json-args: `((type . ,type)
+			       (ms . ,time-ms)))))
 
-(define (set-implicit-wait-time! time-ms)
-  (remote-execute 'POST "/session/~A/timeouts/implicit_wait"
-                  json-args: `((ms . ,time-ms))))
+(define (set-implicit-timeout! time-ms)
+  (set-timeout! "implicit" time-ms))
 
+(define (set-script-timeout! time-ms)
+  (set-timeout! "script" time-ms))
+
+(define (set-page-load-timeout! time-ms)
+  (set-timeout! "pageLoad" time-ms))
 
 ;;; Javascript
 (define (execute-javascript script args)
@@ -244,25 +262,19 @@
 (define (javascript-dialog-text)
   (response-value (remote-execute 'GET "/session/~A/alert_text")))
 
-
-(define (set-javascript-dialog-text! text)
-  (remote-execute 'POST "/session/~A/alert_text"
-                  json-args: `((keysToSend . ,text))))
-
-
 (define (dismiss-javascript-dialog!)
-  (remote-execute 'POST "/session/~A/dismiss_alert"))
+  (response-value (remote-execute 'POST "/session/~A/dismiss_alert")))
 
 
 (define (accept-javascript-dialog!)
-  (remote-execute 'POST "/session/~A/accept_alert"))
+  (response-value (remote-execute 'POST "/session/~A/accept_alert")))
 
 
 
 ;;; URLs
 (define (set-url! url)
-  (remote-execute 'POST "/session/~A/url"
-                  json-args: `((url . ,url))))
+  (response-value (remote-execute 'POST "/session/~A/url"
+                  json-args: `((url . ,url)))))
 
 
 (define (current-url)
@@ -272,53 +284,26 @@
 
 ;;; Navigation
 (define (navigate-forward!)
-  (remote-execute 'POST "/session/~A/forward"))
+  (response-value (remote-execute 'POST "/session/~A/forward")))
 
 
 (define (navigate-backward!)
-  (remote-execute 'POST "/session/~A/back"))
-
-
-
-;;; IME: Input Method Editor
-(define (ime-available-engines)
-  (response-value (remote-execute 'GET "/session/~A/ime/available_engines")))
-
-
-(define (ime-active-engine)
-  (response-value (remote-execute 'GET "/session/~A/ime/active_engine")))
-
-
-(define (ime-activated?)
-  (response-value (remote-execute 'GET "/session/~A/ime/activated")))
-
-
-(define (ime-deactivate!)
-  (remote-execute 'POST "/session/~A/ime/deactivate"))
-
-
-(define (ime-activate! engine)
-  (remote-execute 'POST "/session/~A/ime/activate"
-                  json-args: `((engine . ,engine))))
-
-
+  (response-value (remote-execute 'POST "/session/~A/back")))
 
 ;;; Frames & windows
 
 (define (focus-frame! id)
-  (remote-execute 'POST "/session/~A/frame"
-                  json-args: `((id . ,id))))
+  (response-value (remote-execute 'POST "/session/~A/frame"
+                  json-args: `((id . ,id)))))
 
 
-(define (focus-window! id)
-  (remote-execute 'POST "/session/~A/window"
-                  json-args: `((id . ,id))))
+(define (focus-window! handle)
+  (response-value (remote-execute 'POST "/session/~A/window"
+                  json-args: `((handle . ,handle)))))
 
-
-(define (close-window! id)
-  (remote-execute 'DELETE "/session/~A/window"
-                  json-args: `((id . ,id))))
-
+(define (close-window! handle)
+  (response-value (remote-execute 'DELETE "/session/~A/window"
+                  json-args: `((handle . ,handle)))))
 
 (define (window-handle)
   (response-value (remote-execute 'GET "/session/~A/window_handle")))
@@ -327,18 +312,28 @@
 (define (window-handles)
   (response-value (remote-execute 'GET "/session/~A/window_handles")))
 
+(define (window-size handle)
+  (let ((res (vector->list (response-value (remote-execute 'GET "/session/~A/window/~A/size"
+							   url-args: (list handle))))))
+    (list (car res) (cadr res))))
 
+(define (set-window-size! handle #!key width height)
+  (response-value (remote-execute 'POST "/session/~A/window/~A/size"
+				  url-args: (list handle)
+				  json-args: (append
+					      (if width `((width . ,width)) '())
+					      (if height `((height . ,height)) '())))))
 
-;;; User input
+(define (window-position handle)
+  (cddr (vector->list (response-value (remote-execute 'GET "/session/~A/window/~A/size"
+							   url-args: (list handle))))))
 
-(define (user-input-speed)
-  (response-value (remote-execute 'GET "/session/~A/speed")))
-
-
-(define (set-user-input-speed! speed)
-  (remote-execute 'POST "/session/~A/speed"
-                  json-args: `((speed . ,speed))))
-
+(define (set-window-position! handle #!key x y)
+  (response-value (remote-execute 'POST "/session/~A/window/~A/size"
+				  url-args: (list handle)
+				  json-args: (append
+					      (if x `((x . ,x)) '())
+					      (if y `((y . ,x)) '())))))
 
 ;;; Elements
 
@@ -355,18 +350,18 @@
   (let ((response
          (response-value
           (remote-execute 'POST "/session/~A/element"
-                          json-args: `((using . ,(->string using))
-                                       (value . ,(->string value)))))))
+                          json-args: `((using . ,using)
+                                       (value . ,value))))))
     (make-element
-     (uri-encode-string (alist-ref "ELEMENT" (vector->list response) equal?)))))
+     (uri-encode-string (cdr (vector-ref response 0))))))
 
 
-(define (element-property property #!key (method 'GET))
+(define (%element-property% property #!key (method 'GET))
   (lambda (elt #!key (using 'id))
     (response-value
      (remote-execute method
-                     (conc "/session/~A/element/~A/" property)
-                     url-args: (list (element-id elt))))))
+                     "/session/~A/element/~A/~A"
+                     url-args: (list (element-id elt) property)))))
 
 (define (get-element-by-id id) (get-element id using: "id"))
 
@@ -389,35 +384,25 @@
 (define (get-element-by-xpath xpath)
   (get-element xpath using: "xpath"))
 
-(define element-value (element-property 'value))
-(define element-tag-name (element-property 'name))
-(define element-text (element-property 'text))
+(define element-value (%element-property% 'value))
+(define element-tag-name (%element-property% 'name))
+(define element-text (%element-property% 'text))
 
 ;; use click instead of selected for newer protocol versions
-(define select-element! (element-property 'click method: 'POST))
+(define select-element! (%element-property% 'click method: 'POST))
 
-(define toggle-element! (element-property 'toggle method: 'POST))
-(define click-element! (element-property 'click method: 'POST))
-(define clear-element! (element-property 'clear method: 'POST))
-(define hover-element! (element-property 'hover method: 'POST))
+(define click-element! (%element-property% 'click method: 'POST))
+(define clear-element! (%element-property% 'clear method: 'POST))
 
-(define (drag-element! elt x y)
-  (remote-execute 'POST
-                  (conc "/session/~A/element/~A/drag")
-                  url-args: (list (element-id elt))
-                  json-args: `((x . ,x)
-                               (y . ,y))))
-
-
-(define element-enabled? (element-property 'enabled))
-(define element-selected? (element-property 'selected))
-(define element-displayed? (element-property 'displayed))
+(define element-enabled? (%element-property% 'enabled))
+(define element-selected? (%element-property% 'selected))
+(define element-displayed? (%element-property% 'displayed))
 
 (define (element-location elt)
   (let ((res ;; #(("x" . <coord-x>) ("y" . <coord-y>))
          (response-value
           (remote-execute 'GET
-                          (conc "/session/~A/element/~A/location")
+                          "/session/~A/element/~A/location"
                           url-args: (list (element-id elt))))))
     (cons (cdr (vector-ref res 0))
           (cdr (vector-ref res 1)))))
@@ -426,7 +411,7 @@
   (let ((res ;; #(("x" . <coord-x>) ("y" . <coord-y>))
          (response-value
           (remote-execute 'GET
-                          (conc "/session/~A/element/~A/location_in_view")
+                          "/session/~A/element/~A/location_in_view"
                           url-args: (list (element-id elt))))))
     (cons (cdr (vector-ref res 0))
           (cdr (vector-ref res 1)))))
@@ -435,12 +420,12 @@
   (let ((res ;; #(("width" . <coord-x>) ("height" . <coord-y>))
          (response-value
           (remote-execute 'GET
-                          (conc "/session/~A/element/~A/size")
+                          "/session/~A/element/~A/size"
                           url-args: (list (element-id elt))))))
     (cons (cdr (vector-ref res 0))
           (cdr (vector-ref res 1)))))
 
-(define (element-css-property-value elt property)
+(define (element-css-property elt property)
   (response-value (remote-execute 'GET "/session/~A/element/~A/css/~A"
                                   url-args: (list (element-id elt) property))))
 
@@ -449,32 +434,22 @@
   (let ((value (if (string? value)
                    (map ->string (string->list value))
                    value)))
-    (remote-execute 'POST "/session/~A/element/~A/value"
+    (response-value (remote-execute 'POST "/session/~A/element/~A/value"
                     url-args: (list (element-id elt))
-                    json-args: `((value . ,value)))))
+                    json-args: `((value . ,value))))))
 
-
-(define (active-element-send-modifier! key down?)
-  (remote-execute 'POST "/session/~A/modifier"
-                  json-args: `((value . ,key)
-                               (isdown . ,down?))))
-
-
-(define (element-attribute-value elt attrib)
+(define (element-attribute elt attrib)
   (response-value
    (remote-execute 'GET
                    "/session/~A/element/~A/attribute/~A"
-                   url-args: (list (element-id elt) (->string attrib)))))
+                   url-args: (list (element-id elt) attrib))))
 
+(define (element-property elt property)
+    (response-value
+     (remote-execute 'GET  "/session/~A/element/~A/property/~A"
+                     url-args: (list (element-id elt) property))))
 
-(define (same-element? elt1 elt2)
-  (response-value
-   (remote-execute 'GET "/session/~A/element/~A/equals/~A"
-                   url-args: (list (element-id elt1)
-                                   (element-id elt2)))))
-
-
-(define (get-elements value #!optional (using "class name"))
+(define (get-elements value #!key (using "class name"))
   (let ((res (response-value
               (remote-execute 'POST "/session/~A/elements"
                               json-args: `((using . ,using)
@@ -482,7 +457,7 @@
     (map (lambda (result)
            (make-element
             (uri-encode-string
-             (alist-ref "ELEMENT" (vector->list result) equal?))))
+             (cdr (vector-ref result 0)))))
          res)))
 
 (define get-elements-by-class-name get-elements)
@@ -522,7 +497,7 @@
 (define (name/regex-equal obj)
   (if (string? obj)
       equal?
-      string-match))
+      irregex-match))
 
 (define (get-cookies-by field str/regex)
   (let ((cookies (get-cookies))
@@ -568,16 +543,11 @@
 
 
 (define (refresh-page!)
-  (remote-execute 'POST "/session/~A/refresh"))
+  (response-value (remote-execute 'POST "/session/~A/refresh")))
 
 
 
 ;;; Screen
-
-(define (screen-orientation elt)
-  (let ((res (response-value (remote-execute 'GET "/session/~A/orientation"))))
-    (string->symbol (string-downcase res))))
-
 
 (define (screenshot)
   (response-value (remote-execute 'GET "/session/~A/screenshot")))
@@ -586,7 +556,7 @@
 ;;; Mouse actions
 
 (define (move-mouse-cursor-to! #!optional x y elt)
-  (remote-execute 'POST "/session/~A/moveto"
+  (response-value (remote-execute 'POST "/session/~A/moveto"
                   json-args: (append
                               (if elt
                                   `((element . ,(element-id elt)))
@@ -596,25 +566,25 @@
                                   '())
                               (if y
                                   `((yoffset . ,y))
-                                  '()))))
+                                  '())))))
 
 
 (define (click-mouse-button! #!optional button)
-  (remote-execute 'POST "/session/~A/click"
+  (response-value (remote-execute 'POST "/session/~A/click"
                   json-args: (and button
-                                  `((button . ,button)))))
+                                  `((button . ,button))))))
 
 
 (define (mouse-button-down!)
-  (remote-execute 'POST "/session/~A/buttondown"))
+  (response-value (remote-execute 'POST "/session/~A/buttondown")))
 
 
 (define (mouse-button-up!)
-  (remote-execute 'POST "/session/~A/buttonup"))
+  (response-value (remote-execute 'POST "/session/~A/buttonup")))
 
 
 (define (double-click-mouse-button!)
-  (remote-execute 'POST "/session/~A/doubleclick"))
+  (response-value (remote-execute 'POST "/session/~A/doubleclick")))
 
 (include "firefox-webdriver.scm")
 (include "remote-webdriver.scm")
