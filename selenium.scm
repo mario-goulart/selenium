@@ -1,6 +1,6 @@
 (module selenium
   (;; Session
-   quit! status sessions set-implicit-wait-time!
+   quit! status sessions set-implicit-timeout!
 
    ;; Javascript
    execute-javascript execute-javascript-async javascript-dialog-text
@@ -235,7 +235,7 @@
 		  json-args: `((type . ,type)
 			       (ms . ,time-ms)))))
 
-(define (set-implicit-wait-time! time-ms)
+(define (set-implicit-timeout! time-ms)
   (set-timeout! "implicit" time-ms))
 
 

@@ -119,7 +119,7 @@
    ;;   (test "/bar" (cookie-path cookie))
    ;;   (test #f (cookie-secure? cookie)))
 
-   (test (void) (set-implicit-wait-time! 0))
+   (test (void) (set-implicit-timeout! 0))
 
    (test (void) (execute-javascript-async "var callback = arguments[1]; callback(console.log('Hello, ' + arguments[0]))" '("Jack")))
    (test (void) (execute-javascript "console.log('Hello, ' + arguments[0])" '("John")))
