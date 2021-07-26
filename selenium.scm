@@ -20,7 +20,7 @@
    element? active-element get-element-by-id get-element-by-name get-element-by-class-name
    get-element-by-css-selector get-element-by-link-text
    get-element-by-partial-link-text get-element-by-tag-name get-element-by-xpath
-   element-value element-tag-name element-text select-element! toggle-element!
+   element-value element-tag-name element-text select-element!
    click-element! clear-element! hover-element! drag-element! element-enabled?
    element-selected? element-displayed? element-location element-location-in-view
    element-size element-css-property-value set-element-value!
@@ -360,7 +360,6 @@
 ;; use click instead of selected for newer protocol versions
 (define select-element! (element-property 'click method: 'POST))
 
-(define toggle-element! (element-property 'toggle method: 'POST))
 (define click-element! (element-property 'click method: 'POST))
 (define clear-element! (element-property 'clear method: 'POST))
 (define hover-element! (element-property 'hover method: 'POST))
