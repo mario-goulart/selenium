@@ -13,10 +13,6 @@
    ;; Navigation
    navigate-forward! navigate-backward!
 
-   ;; IME: Input Method Editor
-   ime-available-engines ime-active-engine ime-activated? ime-deactivate!
-   ime-activate!
-
    ;; Frames & windows
    focus-frame! focus-window! close-window! window-handle window-handles
 
@@ -288,31 +284,6 @@
 
 (define (navigate-backward!)
   (response-value (remote-execute 'POST "/session/~A/back")))
-
-
-
-;;; IME: Input Method Editor
-(define (ime-available-engines)
-  (response-value (remote-execute 'GET "/session/~A/ime/available_engines")))
-
-
-(define (ime-active-engine)
-  (response-value (remote-execute 'GET "/session/~A/ime/active_engine")))
-
-
-(define (ime-activated?)
-  (response-value (remote-execute 'GET "/session/~A/ime/activated")))
-
-
-(define (ime-deactivate!)
-  (remote-execute 'POST "/session/~A/ime/deactivate"))
-
-
-(define (ime-activate! engine)
-  (remote-execute 'POST "/session/~A/ime/activate"
-                  json-args: `((engine . ,engine))))
-
-
 
 ;;; Frames & windows
 
