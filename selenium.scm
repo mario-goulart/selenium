@@ -24,7 +24,7 @@
    click-element! clear-element! element-enabled?
    element-selected? element-displayed? element-location element-location-in-view
    element-size element-css-property-value set-element-value!
-   active-element-send-modifier! element-attribute-value same-element?
+   element-attribute-value same-element?
    get-elements-by-class-name get-elements-by-css-selector get-elements-by-id
    get-elements-by-name get-elements-by-link-text
    get-elements-by-partial-link-text get-elements-by-tag-name
@@ -406,13 +406,6 @@
     (response-value (remote-execute 'POST "/session/~A/element/~A/value"
                     url-args: (list (element-id elt))
                     json-args: `((value . ,value))))))
-
-
-(define (active-element-send-modifier! key down?)
-  (remote-execute 'POST "/session/~A/modifier"
-                  json-args: `((value . ,key)
-                               (isdown . ,down?))))
-
 
 (define (element-attribute-value elt attrib)
   (response-value
