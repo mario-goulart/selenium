@@ -14,7 +14,7 @@
    navigate-forward! navigate-backward!
 
    ;; Frames & windows
-   focus-frame! focus-window! close-window! window-handle window-handles window-size set-window-size! window-position
+   focus-frame! focus-window! close-window! window-handle window-handles window-size set-window-size! window-position set-window-position!
 
    ;; Elements
    element? active-element get-element-by-id get-element-by-name get-element-by-class-name
@@ -328,6 +328,12 @@
   (cddr (vector->list (response-value (remote-execute 'GET "/session/~A/window/~A/size"
 							   url-args: (list handle))))))
 
+(define (set-window-position! handle #!key x y)
+  (response-value (remote-execute 'POST "/session/~A/window/~A/size"
+				  url-args: (list handle)
+				  json-args: (append
+					      (if x `((x . ,x)) '())
+					      (if y `((y . ,x)) '())))))
 
 ;;; Elements
 

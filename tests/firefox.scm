@@ -146,5 +146,6 @@
    (test "x" (caar (window-size win0)))
    (test "width" (caar (window-position win0)))
    (test "x" (car (vector-ref (set-window-size! win0 width: 1024 height: 768) 0)))
+   (test "x" (car (vector-ref (set-window-position! win0 x: 10 y: 10) 0)))
    (test '() (close-window! win0)))
  capabilities: caps)
