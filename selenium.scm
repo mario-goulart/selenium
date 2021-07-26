@@ -1,6 +1,6 @@
 (module selenium
   (;; Session
-   quit! status sessions set-implicit-timeout! set-script-timeout!
+   quit! status sessions set-implicit-timeout! set-script-timeout! set-page-load-timeout!
 
    ;; Javascript
    execute-javascript execute-javascript-async javascript-dialog-text
@@ -240,6 +240,9 @@
 
 (define (set-script-timeout! time-ms)
   (set-timeout! "script" time-ms))
+
+(define (set-page-load-timeout! time-ms)
+  (set-timeout! "pageLoad" time-ms))
 
 ;;; Javascript
 (define (execute-javascript script args)

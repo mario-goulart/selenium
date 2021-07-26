@@ -121,6 +121,7 @@
 
    (test (void) (set-implicit-timeout! 0))
    (test (void) (set-script-timeout! 30000))
+   (test (void) (set-page-load-timeout! 300000))
 
    (test (void) (execute-javascript-async "var callback = arguments[1]; callback(console.log('Hello, ' + arguments[0]))" '("Jack")))
    (test (void) (execute-javascript "console.log('Hello, ' + arguments[0])" '("John")))
