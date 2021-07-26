@@ -31,6 +31,7 @@
    (test #t (element? foo-input-elt))
    (test "input" (element-tag-name foo-input-elt))
    (test "foo-input-value" (element-attribute-value foo-input-elt 'value))
+   (test "foo-input-value" (element-property foo-input-elt 'value))
    (test (void) (clear-element! foo-input-elt))
    (test (void) (set-element-value! foo-input-elt "new value"))
 
