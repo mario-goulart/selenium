@@ -333,7 +333,7 @@
      (uri-encode-string (cdr (vector-ref response 0))))))
 
 
-(define (element-property property #!key (method 'GET))
+(define (%element-property% property #!key (method 'GET))
   (lambda (elt #!key (using 'id))
     (response-value
      (remote-execute method
@@ -361,19 +361,19 @@
 (define (get-element-by-xpath xpath)
   (get-element xpath using: "xpath"))
 
-(define element-value (element-property 'value))
-(define element-tag-name (element-property 'name))
-(define element-text (element-property 'text))
+(define element-value (%element-property% 'value))
+(define element-tag-name (%element-property% 'name))
+(define element-text (%element-property% 'text))
 
 ;; use click instead of selected for newer protocol versions
-(define select-element! (element-property 'click method: 'POST))
+(define select-element! (%element-property% 'click method: 'POST))
 
-(define click-element! (element-property 'click method: 'POST))
-(define clear-element! (element-property 'clear method: 'POST))
+(define click-element! (%element-property% 'click method: 'POST))
+(define clear-element! (%element-property% 'clear method: 'POST))
 
-(define element-enabled? (element-property 'enabled))
-(define element-selected? (element-property 'selected))
-(define element-displayed? (element-property 'displayed))
+(define element-enabled? (%element-property% 'enabled))
+(define element-selected? (%element-property% 'selected))
+(define element-displayed? (%element-property% 'displayed))
 
 (define (element-location elt)
   (let ((res ;; #(("x" . <coord-x>) ("y" . <coord-y>))
