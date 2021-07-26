@@ -23,7 +23,7 @@
    element-value element-tag-name element-text select-element!
    click-element! clear-element! element-enabled?
    element-selected? element-displayed? element-location element-location-in-view
-   element-size element-css-property-value set-element-value!
+   element-size element-css-property set-element-value!
    element-attribute element-property
    get-elements-by-class-name get-elements-by-css-selector get-elements-by-id
    get-elements-by-name get-elements-by-link-text
@@ -402,7 +402,7 @@
     (cons (cdr (vector-ref res 0))
           (cdr (vector-ref res 1)))))
 
-(define (element-css-property-value elt property)
+(define (element-css-property elt property)
   (response-value (remote-execute 'GET "/session/~A/element/~A/css/~A"
                                   url-args: (list (element-id elt) property))))
 
