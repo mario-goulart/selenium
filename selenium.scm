@@ -24,7 +24,7 @@
    click-element! clear-element! element-enabled?
    element-selected? element-displayed? element-location element-location-in-view
    element-size element-css-property-value set-element-value!
-   element-attribute-value element-property
+   element-attribute element-property
    get-elements-by-class-name get-elements-by-css-selector get-elements-by-id
    get-elements-by-name get-elements-by-link-text
    get-elements-by-partial-link-text get-elements-by-tag-name
@@ -415,7 +415,7 @@
                     url-args: (list (element-id elt))
                     json-args: `((value . ,value))))))
 
-(define (element-attribute-value elt attrib)
+(define (element-attribute elt attrib)
   (response-value
    (remote-execute 'GET
                    "/session/~A/element/~A/attribute/~A"
