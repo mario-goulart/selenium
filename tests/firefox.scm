@@ -18,6 +18,7 @@
    (test #t (substring=? "iVB" (screenshot)))
 
    (test #t (alist-ref "ready" (status) equal?))
+   (test "id" (car (vector-ref (car (sessions)) 0)))
 
    (define foo-elt (get-element-by-id "foo"))
    (test #t (element? foo-elt))
