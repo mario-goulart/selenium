@@ -41,6 +41,7 @@
    (test #t (element-displayed? foo1-elt))
    (test #t (pair? (element-size foo1-elt)))
    (test (void) (move-mouse-cursor-to! 1 1 foo1-elt))
+   (test (void) (select-element! foo1-elt))
 
    (test #t (element? (get-element-by-link-text "a-link")))
 
