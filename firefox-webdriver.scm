@@ -15,10 +15,11 @@
      (command-executor-path path)
      (desired-capabilities
       (alist-update 'browserName "firefox" capabilities)))
-    (open-output-pipe (format "~A ~A -host ~A -port ~A" command jar-file host port))
 
-    ;; Wait until the webdriver starts accepting requests
-    (wait-for-connection host port)
+    (call-with-output-pipe (format "~A ~A -host ~A -port ~A" command jar-file host port)
+			   (lambda (pipe)
+			     ;; Wait until the webdriver starts accepting requests
+			     (wait-for-connection host port)
 
-    (parameterize ((session-identifier (start-session)))
-      (thunk))))
+			     (parameterize ((session-identifier (start-session)))
+			       (thunk))))))
