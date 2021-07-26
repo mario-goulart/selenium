@@ -14,7 +14,7 @@
    navigate-forward! navigate-backward!
 
    ;; Frames & windows
-   focus-frame! focus-window! close-window! window-handle window-handles
+   focus-frame! focus-window! close-window! window-handle window-handles window-size
 
    ;; Elements
    element? active-element get-element-by-id get-element-by-name get-element-by-class-name
@@ -311,6 +311,11 @@
 
 (define (window-handles)
   (response-value (remote-execute 'GET "/session/~A/window_handles")))
+
+(define (window-size handle)
+  (let ((res (vector->list (response-value (remote-execute 'GET "/session/~A/window/~A/size"
+							   url-args: (list handle))))))
+    (list (car res) (cadr res))))
 
 ;;; Elements
 
